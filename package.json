@@ -1,0 +1,16 @@
+{
+  "name": "easyoffice",
+  "version": "1.0.0",
+  "description": "Motion sensor detection",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Kevin BEAULIEU",
+  "license": "BSD",
+  "dependencies": {
+    "rpio": "~0.9.16",
+    "n": "~2.1.7"
+  }
+}
