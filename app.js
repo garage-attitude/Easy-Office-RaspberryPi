@@ -1,16 +1,19 @@
 var rpio = require('rpio');
 var macModule = require('getmac');
 var http = require("http");
+var io = require('socket.io-client');
 
 var eventsArray = [];
 var deviceMacAddress = GetDeviceMacAddress();
 var lastUpdateTimeStamp = Math.round(new Date().getTime());
 var lastBusyState = false;
+var setIntervalID;
 
-var updateInterval = 30000;
+var updateInterval = 10000;
 var busyStateSensitivity = 40;
 var PIN_NUMBER = 7;
 
+var socket = io.connect('https://easy-office.herokuapp.com', {reconnect:true});
 
 function GetDeviceMacAddress(){
 	macModule.getMac(function(err,macAddress){
@@ -77,10 +80,10 @@ function GetApproximativeBusyState(){
 	eventsArray = [];
 
 	if(percentBusyState >= busyStateSensitivity){
-		return "true";
+		return true;
 	}
 	else{
-		return "false";
+		return false;
 	}
 }
 
@@ -100,14 +103,25 @@ function UpdatePreviousState(currentBusyState){
 	}
 }
 
-rpio.open(PIN_NUMBER, rpio.INPUT, rpio.PULL_DOWN);
-
 function pollcb(pin)
 {
         var currentRPIOState = rpio.read(pin) ? true : false;
         UpdatePreviousState(currentRPIOState);
 }
 
+rpio.open(PIN_NUMBER, rpio.INPUT, rpio.PULL_DOWN);
+
 rpio.poll(PIN_NUMBER, pollcb);
 
-setInterval( function() { UpdateRoomAvailability();}, updateInterval);
+setIntervalID = setInterval( function() { UpdateRoomAvailability();}, updateInterval);
+
+socket.on('configUpdate', function(config){
+	console.log("Updating sensor configuration");
+
+	busyStateSensitivity = config.busySensitivity;
+	clearInterval(setIntervalID);
+	setIntervalID = setInterval( function() { UpdateRoomAvailability();}, config.updateInterval);
+
+	console.log("UpdateInterval value: " + config.updateInterval);
+	console.log("BusyStateSensitivity value: " + config.busySensitivity);
+});
