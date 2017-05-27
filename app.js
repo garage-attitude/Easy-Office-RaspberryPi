@@ -1,19 +1,58 @@
 var rpio = require('rpio');
+var macModule = require('getmac');
+var http = require("http");
+
 var eventsArray = [];
 var deviceMacAddress = GetDeviceMacAddress();
-var finalBusyState = false;
 var lastUpdateTimeStamp = Math.round(new Date().getTime());
 var lastBusyState = false;
 
+var updateInterval = 30000;
+var busyStateSensitivity = 40;
+var PIN_NUMBER = 7;
+
+
 function GetDeviceMacAddress(){
+	macModule.getMac(function(err,macAddress){
+    		if (err)  throw err
+    		deviceMacAddress = macAddress;
+	})
 }
 
-function UpdateRoomAvailability(busyState){
+function UpdateRoomAvailability(){
 	UpdateEventsArray(lastBusyState);
-	console.log(eventsArray);
-	finalBusyState = GetApproximativeBusyState();
-	eventsArray = [];
-	//call api of easy-office project
+
+	console.log("*** Updating room availability ***");
+	var requestData = { macAddress: deviceMacAddress, isBusy: GetApproximativeBusyState()};
+	console.log("INFO - --> Sending data to Heroku: " + JSON.stringify(requestData));
+
+	CallHerokuService(JSON.stringify(requestData));
+}
+
+function CallHerokuService(requestData){
+	var options = {
+	  hostname: 'easy-office.herokuapp.com',
+	  port: 80,
+	  path: '/updateRoomAvailability',
+	  method: 'POST',
+	  headers: {
+	      'Content-Type': 'application/json',
+	  }
+	};
+
+	var req = http.request(options, function(res) {
+	  res.setEncoding('utf8');
+	  res.on('data', function (body) {
+	    console.log("INFO - <-- Receiving data from Heroku " + body);
+	  });
+	});
+
+	req.on('error', function(e) {
+	  console.log('WARN - Problem with Heroku app: ' + e.message);
+	});
+
+	req.write(requestData);
+	req.end();
 }
 
 function GetApproximativeBusyState(){
@@ -31,16 +70,26 @@ function GetApproximativeBusyState(){
 	var totalElapseTime = elapseTimeFreeState + elapseTimeBusyState;
 	var percentBusyState = (elapseTimeBusyState / totalElapseTime) * 100;
 	var percentFreeState = (elapseTimeFreeState / totalElapseTime) * 100;
-	console.log("Free: " + percentFreeState + " Busy: " + percentBusyState);
-	return true;
+
+	console.log("INFO - Percentage of FREE state: " + percentFreeState);
+	console.log("INFO - Percentage of BUSY state: " + percentBusyState);
+	
+	eventsArray = [];
+
+	if(percentBusyState >= busyStateSensitivity){
+		return "true";
+	}
+	else{
+		return "false";
+	}
 }
 
 function UpdateEventsArray(currentBusyState){
 	var currentTimeStamp = Math.round(new Date().getTime());
 	var elapseTime = currentTimeStamp - lastUpdateTimeStamp;
-	var newArrayObject = {"isBusy":lastBusyState, "elapseTime":elapseTime};
+	var newEvent = {"isBusy":lastBusyState, "elapseTime":elapseTime};
 
-	eventsArray.push(newArrayObject);
+	eventsArray.push(newEvent);
 	lastUpdateTimeStamp = currentTimeStamp;
 	lastBusyState = currentBusyState;
 }
@@ -51,21 +100,14 @@ function UpdatePreviousState(currentBusyState){
 	}
 }
 
-rpio.open(7, rpio.INPUT, rpio.PULL_DOWN);
+rpio.open(PIN_NUMBER, rpio.INPUT, rpio.PULL_DOWN);
 
 function pollcb(pin)
 {
         var currentRPIOState = rpio.read(pin) ? true : false;
-	
-	if (currentRPIOState){
-		console.log("State is true, someone is moving");
-	}else{
-		console.log("State is false, empty room");
-	}
-
         UpdatePreviousState(currentRPIOState);
 }
 
-rpio.poll(7, pollcb);
+rpio.poll(PIN_NUMBER, pollcb);
 
-setInterval( function() { UpdateRoomAvailability(finalBusyState);}, 30000);
+setInterval( function() { UpdateRoomAvailability();}, updateInterval);
