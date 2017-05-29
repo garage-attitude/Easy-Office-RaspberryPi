@@ -7,10 +7,10 @@ var eventsArray = [];
 var deviceMacAddress = GetDeviceMacAddress();
 var lastUpdateTimeStamp = Math.round(new Date().getTime());
 var lastBusyState = false;
-var setIntervalID;
+var updateIntervalID;
 
-var updateInterval = 10000;
-var busyStateSensitivity = 40;
+var updateClock = 10000;
+var sensitivity = 40;
 var PIN_NUMBER = 7;
 
 var socket = io.connect('https://easy-office.herokuapp.com', {reconnect:true});
@@ -76,10 +76,8 @@ function GetApproximativeBusyState(){
 
 	console.log("INFO - Percentage of FREE state: " + percentFreeState);
 	console.log("INFO - Percentage of BUSY state: " + percentBusyState);
-	
-	eventsArray = [];
 
-	if(percentBusyState >= busyStateSensitivity){
+	if(percentBusyState >= sensitivity){
 		return true;
 	}
 	else{
@@ -113,16 +111,16 @@ rpio.open(PIN_NUMBER, rpio.INPUT, rpio.PULL_DOWN);
 
 rpio.poll(PIN_NUMBER, pollcb);
 
-setIntervalID = setInterval( function() { UpdateRoomAvailability();}, updateInterval);
+updateIntervalID = setInterval( function() { UpdateRoomAvailability(); eventsArray = [];}, updateClock);
 
-socket.on('update_config', function(config){
+socket.on('update_config', function(input){
 	console.log("Updating sensor configuration");
-	console.log(config);
-	var parsedJson = JSON.parse(config);
-	busyStateSensitivity = parsedJson.config.busySensitivity;
-	clearInterval(setIntervalID);
-	setIntervalID = setInterval( function() { UpdateRoomAvailability();}, parsedJson.config.updateInterval);
+	console.log(input);
+	var result = JSON.parse(input);
+	sensitivity = result.configs.sensor.sensitivity;
+	clearInterval(updateIntervalID);
+	updateIntervalID = setInterval( function() { UpdateRoomAvailability();}, result.configs.sensor.captureInterval);
 
-	console.log("UpdateInterval value: " + parsedJson.config.updateInterval);
-	console.log("BusyStateSensitivity value: " + parsedJson.config.busySensitivity);
+	console.log("New capture interval value is: " + result.configs.sensor.captureInterval);
+	console.log("New sensitivity value is: " + result.configs.sensor.sensitivity);
 });
