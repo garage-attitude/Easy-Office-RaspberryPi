@@ -1,33 +1,30 @@
 ## Welcome to Easy Office project
 
-### Markdown
+### Create a service to make it bootable on Raspberry PI
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+In order to make the node js start on Raspberry boot please do the following steps:
 
 ```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+cd /home/pi/Documents
+sudo mkdir GarageProjects
 ```
+Copy git repo of easy-office in that folder and move the executable called "easyOfficeService" in the folder /etc/init.d
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Now we can test it:
 
-### Jekyll Themes
+```markdown
+sudo sh /etc/init.d/easyOfficeService start/stop
+```
+If all goes well we can, finally, make it bootable:
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/garage-attitude/easy-office/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```markdown
+sudo update-rc.d easyOfficeService defaults
+```
+To remove it from boot:
 
-### Support or Contact
+```markdown
+sudo update-rc.d -f easyOfficeService remove
+```
+### Contact
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+For more details send email to kevin.beaulieu@outlook.com
