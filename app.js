@@ -115,13 +115,14 @@ rpio.poll(PIN_NUMBER, pollcb);
 
 setIntervalID = setInterval( function() { UpdateRoomAvailability();}, updateInterval);
 
-socket.on('configUpdate', function(config){
+socket.on('update_config', function(config){
 	console.log("Updating sensor configuration");
-
-	busyStateSensitivity = config.busySensitivity;
+	console.log(config);
+	var parsedJson = JSON.parse(config);
+	busyStateSensitivity = parsedJson.config.busySensitivity;
 	clearInterval(setIntervalID);
-	setIntervalID = setInterval( function() { UpdateRoomAvailability();}, config.updateInterval);
+	setIntervalID = setInterval( function() { UpdateRoomAvailability();}, parsedJson.config.updateInterval);
 
-	console.log("UpdateInterval value: " + config.updateInterval);
-	console.log("BusyStateSensitivity value: " + config.busySensitivity);
+	console.log("UpdateInterval value: " + parsedJson.config.updateInterval);
+	console.log("BusyStateSensitivity value: " + parsedJson.config.busySensitivity);
 });
