@@ -8,6 +8,7 @@ var deviceMacAddress = GetDeviceMacAddress();
 var lastUpdateTimeStamp = Math.round(new Date().getTime());
 var lastBusyState = false;
 var updateIntervalID;
+var newUpdateIntervalID;
 
 var updateClock = 10000;
 var sensitivity = 40;
@@ -28,7 +29,7 @@ function UpdateRoomAvailability(){
 	console.log("*** Updating room availability ***");
 	var requestData = { macAddress: deviceMacAddress, isBusy: GetApproximativeBusyState()};
 	console.log("INFO - --> Sending data to Heroku: " + JSON.stringify(requestData));
-
+	eventsArray = [];
 	CallHerokuService(JSON.stringify(requestData));
 }
 
@@ -61,7 +62,7 @@ function CallHerokuService(requestData){
 function GetApproximativeBusyState(){
 	var elapseTimeBusyState = 0;
 	var elapseTimeFreeState = 0;
-	
+	console.log(eventsArray);
 	for(var i = 0; i < eventsArray.length; i++){
 		if(eventsArray[i].isBusy){
 			elapseTimeBusyState = elapseTimeBusyState + eventsArray[i].elapseTime;
@@ -111,16 +112,22 @@ rpio.open(PIN_NUMBER, rpio.INPUT, rpio.PULL_DOWN);
 
 rpio.poll(PIN_NUMBER, pollcb);
 
-updateIntervalID = setInterval( function() { UpdateRoomAvailability(); eventsArray = [];}, updateClock);
+updateIntervalID = setInterval( function() { UpdateRoomAvailability();}, updateClock);
 
 socket.on('update_config', function(input){
-	console.log("Updating sensor configuration");
-	console.log(input);
 	var result = JSON.parse(input);
-	sensitivity = result.configs.sensor.sensitivity;
-	clearInterval(updateIntervalID);
-	updateIntervalID = setInterval( function() { UpdateRoomAvailability();}, result.configs.sensor.captureInterval);
-
-	console.log("New capture interval value is: " + result.configs.sensor.captureInterval);
-	console.log("New sensitivity value is: " + result.configs.sensor.sensitivity);
+	if(sensitivity != result.configs.sensor.sensitivity){
+		console.log("Updating sensor sensitivity configuration");
+		sensitivity = result.configs.sensor.sensitivity;
+		console.log("New sensitivity value is: " + sensitivity);
+	}
+		
+	if(updateClock != result.configs.sensor.captureInterval){
+		console.log("Updating sensor capture interval configuration");
+		newUpdateIntervalID = setInterval( function() { UpdateRoomAvailability();}, result.configs.sensor.captureInterval);
+		clearInterval(updateIntervalID);
+		updateIntervalID = newUpdateIntervalID;
+		updateClock = result.configs.sensor.captureInterval;
+		console.log("New capture interval value is: " + updateClock);
+	}
 });

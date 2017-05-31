@@ -6,23 +6,23 @@ In order to make the node js start on Raspberry boot please do the following ste
 
 ```markdown
 cd /home/pi/Documents
-sudo mkdir GarageProjects
+sudo mkdir garage-projects
 sudo npm install forever -g
 ```
-Copy git repo of easy-office in that folder and move the executable called "easyOfficeService" in the folder /etc/init.d
+Copy git repo of easy-office in that folder and move the executable called "easyoffice-server" in the folder /etc/init.d
 
 Now we can test it:
 ```markdown
-sudo sh /etc/init.d/easyOfficeService start/stop
+sudo sh /etc/init.d/easyoffice-server start/stop
 ```
 ### Make it bootable
 If all goes well we can, finally, make it bootable:
 ```markdown
-sudo update-rc.d easyOfficeService defaults
+sudo update-rc.d easyoffice-server defaults
 ```
 To remove it from boot:
 ```markdown
-sudo update-rc.d -f easyOfficeService remove
+sudo update-rc.d -f easyoffice-server remove
 ```
 ### Contact
 
