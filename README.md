@@ -1,6 +1,6 @@
 ## Welcome to Easy Office project
 
-### Create a service to make it bootable on Raspberry PI
+### Create a service to make it bootable on Raspberry PI Zero
 
 In order to make the node js start on Raspberry boot please do the following steps:
 
