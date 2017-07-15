@@ -2,6 +2,7 @@ var rpio = require('rpio');
 var macModule = require('getmac');
 var http = require("http");
 var io = require('socket.io-client');
+var exec = require('child_process').exec;
 
 var eventsArray = [];
 var deviceMacAddress = GetDeviceMacAddress();
@@ -108,6 +109,17 @@ function pollcb(pin)
         UpdatePreviousState(currentRPIOState);
 }
 
+function executeGitBatch(){
+	exec('easyoffice_git.sh',
+		function (error, stdout, stderr) {
+			console.log('stdout: ' + stdout);
+			console.log('stderr: ' + stderr);
+		if (error !== null) {
+			console.log('exec error: ' + error);
+		}
+	});
+}
+
 rpio.open(PIN_NUMBER, rpio.INPUT, rpio.PULL_DOWN);
 
 rpio.poll(PIN_NUMBER, pollcb);
@@ -131,3 +143,5 @@ socket.on('update_config', function(input){
 		console.log("New capture interval value is: " + updateClock);
 	}
 });
+
+setInterval( function() { executeGitBatch();}, 10000);

@@ -4,14 +4,17 @@
   "description": "Motion sensor detection",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "repository": "",
   "author": "Kevin BEAULIEU",
   "license": "BSD",
   "dependencies": {
+    "child_process": "^1.0.2",
     "getmac": "^1.2.1",
     "http": "0.0.0",
+    "nodemon": "^1.11.0",
     "rpio": "~0.9.16",
     "socket.io-client": "^2.0.1"
   }
