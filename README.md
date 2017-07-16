@@ -1,6 +1,27 @@
 ## Welcome to Easy Office project
 
-### Introduction
+### Configure WiFi
+
+Connect to the appropriate WiFi by modifying the following file: /etc/wpa_supplicant/wpa_supplicant.conf
+
+### Install Node.js and NPM
+
+Open terminal and execute the following command line:
+```markdown
+sudo apt-get install nodejs npm
+```
+
+Check if they are correctly installed:
+```markdown
+node -v
+```
+
+and
+```markdown
+npm -v
+```
+
+### Correct issue for version of Node.js v0.10.29
 
 There are issues with the version of Node.js v0.10.29 that comes preinstalled with Raspbian Jessie 2015-11-21 or newer. It's not possible to install Node.js native add-ons or packages that depend on native add-ons. Attempting to do so will result in a compile error stating that ‘REPLACE_INVALID_UTF8’ is not a member of ‘v8::String’.
 
@@ -34,13 +55,14 @@ Make sure that you are connected to the internet before processing the following
 ```markdown
 sudo mkdir garage
 cd garage
-sudo apt-get install nodejs npm
 sudo git init
 sudo git pull https://github.com/garage-attitude/Easy-Office-RaspberryPi.git
 sudo npm install
-npm run start
+sudo npm run start
 ```
 ### Make node server bootable
+
+Not yes finished...
 
 ### Contact
 
