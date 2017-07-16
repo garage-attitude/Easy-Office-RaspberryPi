@@ -1,6 +1,6 @@
 {
   "name": "easyoffice",
-  "version": "1.0.0",
+  "version": "0.9.1",
   "description": "Motion sensor detection",
   "main": "app.js",
   "scripts": {

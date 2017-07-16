@@ -103,8 +103,7 @@ function UpdatePreviousState(currentBusyState){
 	}
 }
 
-function pollcb(pin)
-{
+function pollcb(pin){
         var currentRPIOState = rpio.read(pin) ? true : false;
         UpdatePreviousState(currentRPIOState);
 }
