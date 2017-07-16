@@ -35,8 +35,8 @@ Make sure that you are connected to the internet before processing the following
 sudo mkdir garage
 cd garage
 sudo apt-get install nodejs npm
-git init
-git pull https://github.com/garage-attitude/Easy-Office-RaspberryPi.git
+sudo git init
+sudo git pull https://github.com/garage-attitude/Easy-Office-RaspberryPi.git
 sudo npm install
 npm run start
 ```
