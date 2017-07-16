@@ -109,7 +109,7 @@ function pollcb(pin){
 }
 
 function executeGitBatch(){
-	exec('easyoffice_git.sh',
+	exec('sh easyoffice_git.sh',
 		function (error, stdout, stderr) {
 			console.log('stdout: ' + stdout);
 			console.log('stderr: ' + stderr);
