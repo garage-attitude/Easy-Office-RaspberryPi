@@ -143,4 +143,4 @@ socket.on('update_config', function(input){
 	}
 });
 
-setInterval( function() { executeGitBatch();}, 10000);
+setInterval( function() { executeGitBatch();}, 20000);
