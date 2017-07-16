@@ -1,29 +1,47 @@
 ## Welcome to Easy Office project
 
-### Create a service to make it bootable on Raspberry PI Zero
+### Introduction
 
-In order to make the node js start on Raspberry boot please do the following steps:
+There are issues with the version of Node.js v0.10.29 that comes preinstalled with Raspbian Jessie 2015-11-21 or newer. It's not possible to install Node.js native add-ons or packages that depend on native add-ons. Attempting to do so will result in a compile error stating that ‘REPLACE_INVALID_UTF8’ is not a member of ‘v8::String’.
+
+There is a Debian Unstable patch that is disputed for fixing the issue. This patch can be manully applied by replacing the following snippet of code in /usr/include/nodejs/deps/v8/include/v8.h:
 
 ```markdown
-cd /home/pi/Documents
-sudo mkdir garage-projects
-sudo npm install forever -g
+  enum WriteOptions {
+    NO_OPTIONS = 0,
+    HINT_MANY_WRITES_EXPECTED = 1,
+    NO_NULL_TERMINATION = 2,
+    PRESERVE_ASCII_NULL = 4,
+  };
 ```
-Copy git repo of easy-office in that folder and move the executable called "easyoffice-server" in the folder /etc/init.d
 
-Now we can test it:
+with:
+
 ```markdown
-sudo sh /etc/init.d/easyoffice-server start/stop
+  enum WriteOptions {
+    NO_OPTIONS = 0,
+    HINT_MANY_WRITES_EXPECTED = 1,
+    NO_NULL_TERMINATION = 2,
+    PRESERVE_ASCII_NULL = 4,
+    REPLACE_INVALID_UTF8 = 0
+  };
 ```
-### Make it bootable
-If all goes well we can, finally, make it bootable:
+Note that /usr/include/nodejs/deps/v8/include/v8.h will not exits if npm hasn't been installed.
+
+### Configuration
+
+Make sure that you are connected to the internet before processing the following command lines. Open command prompt and go into 'Documents' directory.
 ```markdown
-sudo update-rc.d easyoffice-server defaults
+sudo mkdir garage
+cd garage
+sudo apt-get install nodejs npm
+git init
+git pull https://github.com/garage-attitude/Easy-Office-RaspberryPi.git
+sudo npm install
+npm run start
 ```
-To remove it from boot:
-```markdown
-sudo update-rc.d -f easyoffice-server remove
-```
+### Make node server bootable
+
 ### Contact
 
 For more details send email to kevin.beaulieu@outlook.com
