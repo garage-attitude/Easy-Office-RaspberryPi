@@ -24,10 +24,10 @@ function GetDeviceMacAddress(){
 function executeGitBatch(){
 	exec('sudo sh git.sh',
 		function (error, stdout, stderr) {
-			console.log('stdout: ' + stdout);
-			console.log('stderr: ' + stderr);
+			console.log('INFO | Stdout: ' + stdout);
+			console.log('ERR | Stderr: ' + stderr);
 		if (error !== null) {
-			console.log('exec error: ' + error);
+			console.log('ERR | Exec error: ' + error);
 		}
 	});
 }
@@ -80,8 +80,8 @@ function GetRoomState(){
 	var percentBusyState = (elapseTimeBusyState / (elapseTimeFreeState + elapseTimeBusyState)) * 100;
 	var percentFreeState = (elapseTimeFreeState / (elapseTimeFreeState + elapseTimeBusyState)) * 100;
 
-	console.log("INFO: " + percentFreeState + "% free");
-	console.log("INFO: " + percentBusyState + "% busy");
+	console.log("INFO | Free: " + percentFreeState + "%");
+	console.log("INFO | Busy: " + percentBusyState + "%");
 
 	if(percentBusyState >= sensitivity){
 		return true;
