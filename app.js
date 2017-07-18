@@ -25,7 +25,6 @@ function executeGitBatch(){
 	exec('sudo sh git.sh',
 		function (error, stdout, stderr) {
 			console.log('INFO | Stdout: ' + stdout);
-			console.log('ERR | Stderr: ' + stderr);
 		if (error !== null) {
 			console.log('ERR | Exec error: ' + error);
 		}
