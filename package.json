@@ -1,7 +1,7 @@
 {
   "name": "easyoffice",
-  "version": "0.9.1",
-  "description": "Motion sensor detection",
+  "version": "1.0.0",
+  "description": "Motion sensor detector",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
