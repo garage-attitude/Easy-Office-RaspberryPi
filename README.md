@@ -73,7 +73,6 @@ cd garage/
 sudo git init
 sudo git pull https://github.com/garage-attitude/Easy-Office-RaspberryPi.git
 sudo npm install
-sudo npm install nodemon -g
 ```
 
 Note: You can run the Node.js server manually by executing the following command line in the folder where the easy-office has been pulled:
@@ -92,7 +91,7 @@ sudo npm run start --prefix /home/pi/Documents/garage/
 Modify the file /etc/rc.local and add the following lines before exit 0:
 ```markdown
 sleep 5
-sudo /usr/local/bin/npm run start --prefix /home/pi/Documents/garage/
+sudo /usr/bin/npm run start --prefix /home/pi/Documents/garage/
 ```
 Don't care about server crashes, it will restart automatically if it crashs (but it won't ;) ) thanks to "forever" npm module. In top of it, each time the git repo is updated, the server will automaticcaly restart with the latest changes from the git repo thanks to the "nodemon" npm module.
 
