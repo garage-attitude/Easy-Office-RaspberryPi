@@ -2,8 +2,6 @@
 
 ### Configure WiFi
 
-Connect to a specific Wi-Fi by modifying the following file: /etc/wpa_supplicant/wpa_supplicant.conf
-
 Add the following lines in the file /etc/wpa_supplicant/wpa_supplicant.conf:
 ```markdown
 network={
