@@ -81,15 +81,20 @@ Note: You can run the Node.js server manually by executing the following command
 ```markdown
 sudo npm run start
 ```
-Don't care about server crashes, it will restart automatically if it crashs (but it won't ;) ) thanks to "forever" npm module. In top of it, each time the git repo is updated, the server will automaticcaly restart with the latest changes from the git repo thanks to the "nodemon" npm module.
 
-### Make node server bootable
+Or from another directory:
+```markdown
+sudo npm run start --prefix /home/pi/Documents/garage/
+```
+
+### Make node server running on Raspberry PI boot
 
 Modify the file /etc/rc.local and add the following lines before exit 0:
 ```markdown
 sleep 5
 sudo /usr/local/bin/npm run start --prefix /home/pi/Documents/garage/
 ```
+Don't care about server crashes, it will restart automatically if it crashs (but it won't ;) ) thanks to "forever" npm module. In top of it, each time the git repo is updated, the server will automaticcaly restart with the latest changes from the git repo thanks to the "nodemon" npm module.
 
 ### Contact
 
