@@ -11,7 +11,7 @@ network={
 	pairwise=CCMP
 	auth_alg=OPEN
 	eap=PEAP
-	identity="YOUR_USER_NAME"
+	identity="wifi-a69367"
 	password="YOUR_PASSWORD"
 }
 ```
@@ -91,7 +91,8 @@ sudo npm run start --prefix /home/pi/Documents/garage/
 Modify the file /etc/rc.local and add the following lines before exit 0:
 ```markdown
 sleep 5
-sudo /usr/bin/npm run start --prefix /home/pi/Documents/garage/
+cd /home/pi/Documents/garage
+sudo /usr/bin/npm run start
 ```
 Don't care about server crashes, it will restart automatically if it crashs (but it won't ;) ) thanks to "forever" npm module. In top of it, each time the git repo is updated, the server will automaticcaly restart with the latest changes from the git repo thanks to the "nodemon" npm module.
 
