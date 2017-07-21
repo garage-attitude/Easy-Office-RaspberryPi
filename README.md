@@ -2,11 +2,21 @@
 
 ### Configure WiFi
 
-Connect your Raspberry Pi to an internet connection
-
-OR
-
 Connect to a specific Wi-Fi by modifying the following file: /etc/wpa_supplicant/wpa_supplicant.conf
+
+Add the following lines in the file /etc/wpa_supplicant/wpa_supplicant.conf:
+```markdown
+network={
+	ssid="_WiFi-First"
+	proto=RSN
+	key_mgmt=WPA-EAP
+	pairwise=CCMP
+	auth_alg=OPEN
+	eap=PEAP
+	identity="YOUR_USER_NAME"
+	password="YOUR_PASSWORD"
+}
+```
 
 ### Install Node.js, NPM and gedit (Text Editor)
 
@@ -65,6 +75,7 @@ cd garage/
 sudo git init
 sudo git pull https://github.com/garage-attitude/Easy-Office-RaspberryPi.git
 sudo npm install
+sudo npm install nodemon -g
 ```
 
 Note: You can run the Node.js server manually by executing the following command line in the folder where the easy-office has been pulled:
@@ -76,7 +87,11 @@ Don't care about server crashes, it will restart automatically if it crashs (but
 
 ### Make node server bootable
 
-Documentation in progress...
+Modify the file /etc/rc.local and add the following lines before exit 0:
+```markdown
+sleep 5
+sudo /usr/local/bin/npm run start --prefix /home/pi/Documents/garage/
+```
 
 ### Contact
 
