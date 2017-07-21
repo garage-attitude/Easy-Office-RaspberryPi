@@ -3,6 +3,19 @@ var macModule = require('getmac');
 var http = require("http");
 var io = require('socket.io-client');
 var exec = require('child_process').exec;
+
+function executeGitBatch(){
+	exec('sudo sh git.sh',
+		function (error, stdout, stderr) {
+			console.log('INFO | Stdout: ' + stdout);
+		if (error !== null) {
+			console.log('ERR | Exec error: ' + error);
+		}
+	});
+}
+
+executeGitBatch();
+
 var statesArray = [];
 var deviceMacAddress = GetDeviceMacAddress();
 var previousTimeStamp = Math.round(new Date().getTime());
@@ -19,16 +32,6 @@ function GetDeviceMacAddress(){
     		if (err)  throw err
     		deviceMacAddress = macAddress;
 	})
-}
-
-function executeGitBatch(){
-	exec('sudo sh git.sh',
-		function (error, stdout, stderr) {
-			console.log('INFO | Stdout: ' + stdout);
-		if (error !== null) {
-			console.log('ERR | Exec error: ' + error);
-		}
-	});
 }
 
 function UpdateRoomAvailability(){
